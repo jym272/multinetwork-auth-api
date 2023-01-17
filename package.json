@@ -13,12 +13,15 @@
     "lint": "eslint --ext .ts,.js src tests",
     "lint:fix": "eslint --ext .ts src --fix",
     "prepare": "husky install .husky",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "test": "bash scripts/run-test-local",
+    "show-report": "npx playwright show-report"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@playwright/test": "^1.29.2",
     "@swc/cli": "^0.1.59",
     "@swc/core": "^1.3.24",
     "bcrypt": "^5.1.0",

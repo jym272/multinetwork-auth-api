@@ -1,8 +1,8 @@
 import { DataTypes, Sequelize } from 'sequelize';
-import { User } from '@db/models';
+import { Auth } from '@db/models';
 
 export const init = (sequelize: Sequelize) => {
-  User.init(
+  Auth.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -12,25 +12,25 @@ export const init = (sequelize: Sequelize) => {
         field: 'id'
       },
       email: {
-        type: DataTypes.STRING(64),
+        type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
-        field: 'email'
+        field: 'email',
+        unique: true
       },
-      password: {
-        type: DataTypes.STRING(64),
+      hashPassword: {
+        type: DataTypes.STRING,
         allowNull: false,
-        field: 'password'
+        field: 'hashPassword'
       },
       token: {
-        type: DataTypes.STRING(64),
+        type: DataTypes.STRING,
         allowNull: true,
         field: 'token'
       }
     },
     {
       sequelize,
-      tableName: 'user'
+      tableName: 'auth'
     }
   );
 };

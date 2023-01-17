@@ -19,8 +19,15 @@ const envController = () => {
   };
 };
 
+const notFoundController = () => {
+  return (req: Request, res: Response) => {
+    res.status(404).send('Not Found!');
+  };
+};
+
 export const utilsController = {
   crashServer: crashServerController(),
   health: healthController(),
-  env: envController()
+  env: envController(),
+  notFound: notFoundController()
 };

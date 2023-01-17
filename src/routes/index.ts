@@ -1,9 +1,9 @@
 import express from 'express';
 import { home } from '@routes/home';
 import { utils } from '@routes/utils';
-import { db } from '@routes/db';
+import { auth } from '@routes/auth';
 
-const routes = [db, home, utils];
+const routes = [home, auth, utils];
 
 export const addRoutes = (server: express.Express) => {
   for (const route of routes) {

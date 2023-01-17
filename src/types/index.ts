@@ -1,4 +1,4 @@
-export interface SignupType {
-  email: string;
+export interface AccessType {
   password: string;
+  email: string;
 }

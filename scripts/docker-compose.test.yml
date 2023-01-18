@@ -1,0 +1,28 @@
+services:
+  db:
+    build:
+      context: postgres-db
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_USER=jorge
+      - POSTGRES_DB=users
+      - POSTGRES_PASSWORD=123456
+    ports:
+      - ${POSTGRES_PORT}:5432
+
+    volumes:
+      - postgres-db-auth-api:/var/lib/postgresql/data
+    healthcheck:
+      #      test: ["CMD-SHELL", "sh -c 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}'"]
+      test: ['CMD-SHELL', "psql -U jorge -d users -c 'SELECT 1'"]
+      interval: 1s
+      timeout: 5s
+      retries: 5
+  dummy:
+    image: alpine
+    #    command: sleep 100000
+    depends_on:
+      db:
+        condition: service_healthy
+volumes:
+  postgres-db-auth-api:

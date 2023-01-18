@@ -23,7 +23,7 @@ export const init = (sequelize: Sequelize) => {
         field: 'hashPassword'
       },
       token: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(1000),
         allowNull: true,
         field: 'token'
       }

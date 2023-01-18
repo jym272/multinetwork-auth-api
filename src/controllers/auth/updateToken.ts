@@ -27,13 +27,19 @@ export const updateTokenController = () => {
       return res.status(400).json({ message: 'Invalid password.' });
     }
 
-    const permissions = {
-      authenticate: true
+    const payload = {
+      permissions: {
+        authenticate: true
+      }
     };
     const options = {
-      expiresIn: '1d'
+      expiresIn: '1d',
+      issuer: 'auth-api',
+      subject: auth.email,
+      jwtid: auth.id.toString(),
+      audience: 'tasks-api'
     };
-    const token = jwt.sign(permissions, secret, options);
+    const token = jwt.sign(payload, secret, options);
 
     try {
       await sequelize.transaction(async () => {

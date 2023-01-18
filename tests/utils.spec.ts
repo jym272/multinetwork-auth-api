@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('routes: health', () => {
+test.describe('routes: utils', () => {
   test('get health route', async ({ request }) => {
     const response = await request.get('/health');
     const body = await response.body();

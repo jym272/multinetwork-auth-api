@@ -1,20 +1,36 @@
 import { Request, Response } from 'express';
 import { getEnvOrFail } from '@utils/env';
-import jwt, { VerifyErrors } from 'jsonwebtoken';
+import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
+import { Auth } from '@db/models';
+import { parseDecodedPayload, controllerErrorWithMessage } from '@utils/index';
 
 const secret = getEnvOrFail('JWT_SECRET');
 
 export const verifyTokenController = () => {
-  return (req: Request, res: Response) => {
+  return async (req: Request, res: Response) => {
     const token = req.params.token;
     let decoded;
     try {
       decoded = jwt.verify(token, secret);
+      const { sub, jti } = decoded as JwtPayload;
+
+      const auth = await Auth.findOne({
+        where: {
+          email: sub,
+          id: jti
+        }
+      });
+
+      if (!auth) {
+        return controllerErrorWithMessage(res, new Error("Auth row in payload don't exists."), 'Invalid token.');
+      }
+
+      const response = parseDecodedPayload(decoded as JwtPayload);
+      return res.json(response);
     } catch (e: unknown) {
       const err = e as VerifyErrors;
       const msg = err.name === 'TokenExpiredError' ? 'Token expired.' : 'Invalid token.';
       return res.status(400).json({ message: msg });
     }
-    return res.json(decoded);
   };
 };

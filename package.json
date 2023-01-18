@@ -12,7 +12,7 @@
     "clean": "rm -rf dist",
     "lint": "eslint --ext .ts,.js src tests",
     "lint:fix": "eslint --ext .ts src --fix",
-    "prepare": "husky install .husky",
+    "prepare": "[ \"$NODE_ENV\" = 'production' ] || husky install .husky",
     "lint-staged": "lint-staged",
     "test": "bash scripts/run-test-local",
     "show-report": "npx playwright show-report"

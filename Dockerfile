@@ -5,7 +5,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # clean install - omit devDependencies
-RUN npm ci --production
+RUN npm ci --omit=dev
 
 FROM node:19-alpine as builder
 

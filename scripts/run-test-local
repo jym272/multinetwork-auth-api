@@ -45,6 +45,7 @@ postgres_port=$(get_random_port_not_used)
 export POSTGRES_PORT=$postgres_port
 
 echo -e "\e[1;32mPostgres db\e[0m"
+export COMPOSE_PROJECT_NAME=auth-api-test
 docker compose -f "$dir"/docker-compose.test.yml up -d
 
 bash "$dir"/test --build

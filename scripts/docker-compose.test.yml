@@ -18,9 +18,8 @@ services:
       interval: 1s
       timeout: 5s
       retries: 5
-  dummy:
-    image: alpine
-    #    command: sleep 100000
+  wait-for-db-to-be-ready:
+    image: hello-world
     depends_on:
       db:
         condition: service_healthy

@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { getEnvOrFail } from '@utils/env';
 import jwt, { JwtPayload, VerifyErrors } from 'jsonwebtoken';
 import { Auth } from '@db/models';
-import { parseDecodedPayload, controllerErrorWithMessage } from '@utils/index';
+import { controllerErrorWithMessage } from '@utils/index';
 
 const secret = getEnvOrFail('JWT_SECRET');
 
@@ -24,9 +24,7 @@ export const verifyTokenController = () => {
       if (!auth) {
         return controllerErrorWithMessage(res, new Error("Auth row in payload don't exists."), 'Invalid token.');
       }
-
-      const response = parseDecodedPayload(decoded as JwtPayload);
-      return res.json(response);
+      return res.json(decoded);
     } catch (e: unknown) {
       const err = e as VerifyErrors;
       const msg = err.name === 'TokenExpiredError' ? 'Token expired.' : 'Invalid token.';

@@ -48,6 +48,8 @@ echo -e "\e[1;32mPostgres db\e[0m"
 export COMPOSE_PROJECT_NAME=auth-api-test
 docker compose -f "$dir"/docker-compose.test.yml up -d
 
-bash "$dir"/test --build
+#1 worker for playwright, important for test order and avoid logging in case of intentional errors
+export CI=true
 
-#docker compose -f "$dir"/docker-compose.test.yml down -v
+bash "$dir"/test --build
+bash "$dir"/down-test-container.sh

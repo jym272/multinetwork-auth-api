@@ -56,7 +56,7 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ inputs.report-name }}
-        path: project/playwright-report
+        path: ${{ inputs.working-directory }}/playwright-report
     - name: Set Output if tests fail
       id: failure-test
       shell: bash

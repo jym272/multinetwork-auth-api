@@ -9,8 +9,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Load cached dependencies and run commands
         uses: ./.github/actions/cache-deps
         with:
@@ -20,8 +20,8 @@ jobs:
   build-api-for-test:
     runs-on: ubuntu-latest
     steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
       - name: Load cached dependencies and run commands
         uses: ./.github/actions/cache-deps
         with:
@@ -38,7 +38,6 @@ jobs:
   test-api:
     needs: build-api-for-test
     runs-on: ubuntu-latest
-#    environment: testing
     env:
       PORT: 3051
       POSTGRES_USER: jorge
@@ -48,13 +47,6 @@ jobs:
       POSTGRES_PORT: 5234
       PASSWORD_PEPPER: XeDRMzq9HpuWL2ZYBw2BDi1sxjT5dnOSdOFEU00wvpo=
       JWT_SECRET: Q5nT18OkUuHam/Y5BRbzY3SYlwNqpJRdvYVwS/gzecc=
-#      MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
-#      MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
-#      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-#      MONGO_CLUSTER: cluster0.hhxxk.mongodb.net
-#      PORT: 3191
-#      MONGO_INITDB_DATABASE: rest-api-test
-#      MONGO_CONNECTION_PROTOCOL: mongodb+srv
     outputs:
       tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
     steps:
@@ -78,35 +70,23 @@ jobs:
             npm ci --omit=dev
             docker compose -f ./scripts/docker-compose.test.yml up -d
             bash scripts/test
-#  report:
-#    needs: [test-api, test-api-containerized]
-#    if: ${{ failure() && (needs.test-api.outputs.tests-failed == 'true' || needs.test-api-containerized.outputs.tests-failed == 'true') }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
-#        name: Download report
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: report
-#          path: project/playwright-report
-#      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
-#        name: Show report
-#        run: |
-#          ls -la
-#          ls -la playwright-report
-#          cat playwright-report/test-results.json | jq
-#      - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
-#        name: Download report containerized
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: report-containerized
-#          path: project/playwright-report-containerized
-#      - if: ${{ needs.test-api-containerized.outputs.tests-failed == 'true' }}
-#        name: Show report containerized
-#        run: |
-#          ls -la
-#          ls -la playwright-report-containerized
-#          cat playwright-report-containerized/test-results.json | jq
+  report:
+    needs: [test-api]
+    if: ${{ failure() && needs.test-api.outputs.tests-failed == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+        name: Download report
+        uses: actions/download-artifact@v3
+        with:
+          name: report
+          path: playwright-report
+      - if: ${{ needs.test-api.outputs.tests-failed == 'true' }}
+        name: Show report
+        run: |
+          ls -la
+          ls -la playwright-report
+          cat playwright-report/test-results.json | jq
 #  deploy:
 #    needs: [test-api, test-api-containerized, lint]
 #    uses: ./.github/workflows/deploy-serverless.yml

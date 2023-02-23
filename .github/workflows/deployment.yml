@@ -28,7 +28,7 @@ jobs:
           run-commands: |
             npm ci --omit=dev
             npm run build
-            cp -rf ../.git/ dist/
+            cp -rf .git/ dist/
             touch dist/.nojekyll
       - name: Upload Artifact - Build dist folder
         uses: actions/upload-artifact@v3

@@ -87,22 +87,3 @@ jobs:
           ls -la
           ls -la playwright-report
           cat playwright-report/test-results.json | jq
-#  deploy:
-#    needs: [test-api, test-api-containerized, lint]
-#    uses: ./.github/workflows/deploy-serverless.yml
-#    secrets: inherit
-##      AWS_ROLE_TO_ASSUME: ${{ secrets.AWS_ROLE_TO_ASSUME }} # for granular secret access delete inherit and add the secret
-#    with:
-#      stage: production
-#
-#  service-endpoint:
-#    needs: deploy
-#    runs-on: ubuntu-latest
-#    defaults:
-#      run:
-#        shell: bash
-#        working-directory: .
-#    steps:
-#      - name: Endpoint
-#        run: |
-#          echo "${{ needs.deploy.outputs.service-endpoint }}"

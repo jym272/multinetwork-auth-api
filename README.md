@@ -2,7 +2,7 @@
 
 Part of multinetwork project(add url)
 
-#### This project needs an `env` file in the root directory with the following:
+#### This project needs an `.env` file in the root directory with the following:
 
 ```dotenv
 PORT=3051

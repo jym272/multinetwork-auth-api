@@ -6,7 +6,7 @@ test.describe('routes: home', () => {
     const body = await response.body();
 
     expect(response.ok()).toBe(true);
-    expect(body.toString()).toBe('Hello there!');
+    expect(body.toString()).toBe('Hello there!!');
     expect(response.status()).toBe(200);
   });
 });

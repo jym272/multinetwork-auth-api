@@ -1,10 +1,11 @@
 name: Lint app
-on: workflow_dispatch
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - "project/**"
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "src/**"
+      - "tests/**"
 jobs:
   lint:
     runs-on: ubuntu-latest

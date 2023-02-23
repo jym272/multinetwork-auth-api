@@ -17,25 +17,24 @@ jobs:
           run-commands: |
             npm ci
             npm run lint
-#  build-api-for-test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Load cached dependencies and run commands
-#        uses: ./.github/actions/cache-deps
-#        with:
-#          working-directory: project
-#          run-commands: |
-#            npm ci --production
-#            npm run build
-#            cp -rf ../.git/ dist/
-#            touch dist/.nojekyll
-#      - name: Upload Artifact - Build dist folder
-#        uses: actions/upload-artifact@v3
-#        with:
-#          name: dist
-#          path: project/dist
+  build-api-for-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        with:
+          run-commands: |
+            npm ci --omit=dev
+            npm run build
+            cp -rf ../.git/ dist/
+            touch dist/.nojekyll
+      - name: Upload Artifact - Build dist folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist
+          path: dist
 #  test-api-containerized:
 #    needs: build-api-for-test
 #    runs-on: ubuntu-latest

@@ -5,9 +5,6 @@ on: workflow_dispatch
 #      - master
 #    paths:
 #      - "project/**"
-defaults:
-  run:
-    working-directory: project
 jobs:
   lint:
     runs-on: ubuntu-latest
@@ -17,7 +14,6 @@ jobs:
       - name: Load cached dependencies and run commands
         uses: ./.github/actions/cache-deps
         with:
-          working-directory: project
           run-commands: |
             npm ci
             npm run lint

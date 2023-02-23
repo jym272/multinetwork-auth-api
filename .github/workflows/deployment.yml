@@ -84,11 +84,19 @@ jobs:
 #          run-commands: |
 #            npm ci --production
 #            bash scripts/test
-#  test-api:
-#    needs: build-api-for-test
-#    runs-on: ubuntu-latest
+  test-api:
+    needs: build-api-for-test
+    runs-on: ubuntu-latest
 #    environment: testing
-#    env:
+    env:
+      PORT: 3051
+      POSTGRES_USER: jorge
+      POSTGRES_DB: auth
+      POSTGRES_PASSWORD: 123456
+      POSTGRES_HOST: localhost
+      POSTGRES_PORT: 5234
+      PASSWORD_PEPPER: XeDRMzq9HpuWL2ZYBw2BDi1sxjT5dnOSdOFEU00wvpo=
+      JWT_SECRET: Q5nT18OkUuHam/Y5BRbzY3SYlwNqpJRdvYVwS/gzecc=
 #      MONGO_INITDB_USERNAME: ${{ secrets.MONGO_INITDB_USERNAME }}
 #      MONGO_INITDB_PASSWORD: ${{ secrets.MONGO_INITDB_PASSWORD }}
 #      JWT_SECRET: ${{ secrets.JWT_SECRET }}
@@ -96,26 +104,28 @@ jobs:
 #      PORT: 3191
 #      MONGO_INITDB_DATABASE: rest-api-test
 #      MONGO_CONNECTION_PROTOCOL: mongodb+srv
-#    outputs:
-#      tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Download artifact - Build dist folder
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: dist
-#          path: project/dist
-#      - name: Load cached dependencies and run commands
-#        uses: ./.github/actions/cache-deps
-#        id: running-tests
-#        with:
-#          running-test: true
-#          report-name: report
-#          working-directory: project
-#          run-commands: |
-#            npm ci --production
-#            bash scripts/test
+    outputs:
+      tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Download artifact - Build dist folder
+        uses: actions/download-artifact@v3
+        with:
+          name: dist
+          path: dist
+      - name: Load cached dependencies and run commands
+        uses: ./.github/actions/cache-deps
+        id: running-tests
+        with:
+          running-test: true
+          report-name: report
+          run-commands: |
+            ls -la
+            pwd
+            npm ci --omit=dev
+            docker compose -f .scripts/docker-compose.test.yml up -d
+            bash scripts/test
 #  report:
 #    needs: [test-api, test-api-containerized]
 #    if: ${{ failure() && (needs.test-api.outputs.tests-failed == 'true' || needs.test-api-containerized.outputs.tests-failed == 'true') }}

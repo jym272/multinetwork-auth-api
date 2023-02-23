@@ -9,8 +9,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#      - name: Checkout code
+#        uses: actions/checkout@v3
       - name: Load cached dependencies and run commands
         uses: ./.github/actions/cache-deps
         with:
@@ -20,8 +20,8 @@ jobs:
   build-api-for-test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+#      - name: Checkout code
+#        uses: actions/checkout@v3
       - name: Load cached dependencies and run commands
         uses: ./.github/actions/cache-deps
         with:
@@ -35,55 +35,6 @@ jobs:
         with:
           name: dist
           path: dist
-#  test-api-containerized:
-#    needs: build-api-for-test
-#    runs-on: ubuntu-latest
-#    # containerizing the host
-#    container:
-#      image: node:19-alpine
-#    environment: testing
-#    env:
-#      MONGO_INITDB_USERNAME: jorge
-#      MONGO_INITDB_PASSWORD: 123456
-#      JWT_SECRET: ${{ secrets.JWT_SECRET }}
-#      # if the host is not containerized use in MONGO_CLUSTER: 127.0.0.1:27017
-#      MONGO_CLUSTER: mongodb-service
-#      PORT: 3391
-#      MONGO_INITDB_DATABASE: rest-api-test-containerized
-#      MONGO_CONNECTION_PROTOCOL: mongodb
-#    services:
-#      mongodb-service:
-#        image: mongo:latest
-#        # if the host is not containerized use:
-#        #        ports:
-#        #          - 27017:27017
-#        env:
-#          MONGO_INITDB_ROOT_USERNAME: jorge
-#          MONGO_INITDB_ROOT_PASSWORD: 123456
-#    outputs:
-#      tests-failed: ${{ steps.running-tests.outputs.tests-failed }}
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
-#      - name: Install Bash
-#        run: apk add --no-cache bash
-#      - name: Install Compatible Tar
-#        run: apk add --no-cache tar
-#      - name: Download artifact - Build dist folder
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: dist
-#          path: project/dist
-#      - name: Load cached dependencies and run commands
-#        uses: ./.github/actions/cache-deps
-#        id: running-tests
-#        with:
-#          running-test: true
-#          report-name: report-containerized
-#          working-directory: project
-#          run-commands: |
-#            npm ci --production
-#            bash scripts/test
   test-api:
     needs: build-api-for-test
     runs-on: ubuntu-latest
@@ -114,14 +65,8 @@ jobs:
         with:
           name: dist
           path: dist
-      # Pull the latest image to build, and avoid caching pull-only images.
-      # (docker pull is faster than caching in most cases.)
       - run: docker compose -f scripts/docker-compose.test.yml pull
-        # In this step, this action saves a list of existing images,
-        # the cache is created without them in the post run.
-        # It also restores the cache if it exists.
       - uses: satackey/action-docker-layer-caching@v0.0.11
-        # Ignore the failure of a step and avoid terminating the job.
         continue-on-error: true
       - name: Load cached dependencies and run commands
         uses: ./.github/actions/cache-deps
@@ -130,8 +75,6 @@ jobs:
           running-test: true
           report-name: report
           run-commands: |
-            ls -la
-            pwd
             npm ci --omit=dev
             docker compose -f ./scripts/docker-compose.test.yml up -d
             bash scripts/test
